@@ -17,7 +17,7 @@ void encrypt_file(char *filepath, unsigned char key)
     if (src == NULL || dest == NULL)
     {
         perror("error open");
-        exit(EXIT_FAILURE);
+        return;
     }
 
     while ((nb_lus = fread(buffer, 1, sizeof(buffer), src)) > 0)
