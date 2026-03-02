@@ -1,0 +1,29 @@
+PSEUDO CODE | my_xor.c
+
+-------------------------------------------
+
+Le but ici est de chiffrer un fichier grâce à l'opérateur XOR, on va avoir 3 arguments le fichier src,
+le fichier dest et la clé. Le programme va agir directement sur les octets du fichier afin de chiffrer
+ou dechifrer le fichier. 
+
+-------------------------------------------
+
+1- Vérifier le bon nombre d'arguments, donc ici on veux 3 arguments, le fichier source, le fichier dest
+   et la clé qui va permettre de chiffrer et dechifrer ET ne pas oublier de gérer les erreurs sur les 
+   arguments.
+
+2- Crée les deux fichiers avec FILES *, argv[1] en "rb" et argv[2] en "wb" ET gérer les erreurs si les
+   pointeurs == NULL.
+
+3- après la gestion des erreurs crée une variable unsigned char "cle" qui va contenir la clé qu'on va elle 
+   convertir grâce à atoi(argv[3])
+
+4- Déclarer unsigned char buffer[4096] et size_t nb_lus.
+
+5- Faire la boucle qui va parcourir tous les octets du fichier source et les lires comme j'ai pu le faire
+   sur l'éxercice de my_cpy.c mais avant de simplement écrire avec fwrite ou viens faire une boucle for 
+   qui va nous permettre de parcourir les octets qu'on viens de lire ET appliquer le masque de chiffrement.
+
+6- Ecrire le buffer transformer dans le fichier dest avec fwrite().
+
+7- Fermer proprement les fichiers. 

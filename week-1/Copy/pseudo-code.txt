@@ -1,0 +1,19 @@
+PSEUDO CODE | my_cpy.c
+
+-------------------------------------------
+
+Le but ici est recopier la fonction de dupliquer un fichier en C.
+
+1-  Vérifier que argc == 3 (Le programme + Source + Destination).
+
+2 - Ouvrir argv[1] en "rb" et argv[2] en "wb".
+
+3 - SI l'un des deux pointeurs est NULL -> perror et quitter.
+
+4 - Déclarer unsigned char buffer[4096] et size_t nb_lus.
+
+5 - BOUCLE : Tant que nb_lus = lire(4096 octets dans source) est supérieur à 0 :
+
+    Écrire nb_lus octets du buffer vers la destination.
+
+6 - Fermer les deux fichiers.
