@@ -18,7 +18,7 @@ int main(int ac, char **av)
         exit(EXIT_FAILURE);
     }
 
-    unsigned char key = atoi(av[3]);
+    unsigned char key = (unsigned char)atoi(av[3]);
 
     unsigned char buffer[4096];
     size_t nb_lus;

