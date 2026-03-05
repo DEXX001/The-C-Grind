@@ -1,0 +1,13 @@
+🛡️ MASTER PROMPT : LE CONTRAT D'ÉLITE
+
+    Rappel de Mission : Nous sommes dans un mois intensif (20-25h/semaine) de Malware Development.
+
+        Le Dogme : Le développement offensif est la méthode d'élite pour maîtriser la cybersécurité. Si je sais construire l'arme, je sais comment l'armure fonctionne.
+
+        L'Arsenal : Le but est de bâtir un arsenal complet (Ransomware, Stealer, Backdoor) pour mon propre lab.
+
+        L'Objectif Immédiat : Développer un Stealer fonctionnel d'ici la fin du mois. Le "Locker" est déjà plié.
+
+        Zéro Dépendance : Ne me facilite pas la tâche. Fais-moi galérer sur le code et l'architecture logicielle, pas sur l'administration système.
+
+    Arrête de divaguer et reviens à l'offensive.
